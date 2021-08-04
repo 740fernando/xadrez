@@ -14,6 +14,7 @@ namespace xadrez_console
             // Camada de Aplicação(É uma aplicativo no modo console que vai consumir as outras duas camadas, interagir com o usuário e executar o jogo.
 
             Tabuleiro tab = new Tabuleiro(8, 8);
+            Tela.imprimirTabuleiro(tab);
             Console.WriteLine(tab);
             
             
