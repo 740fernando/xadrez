@@ -12,6 +12,12 @@ namespace xadrez_console
             // Camada Tabuleiro( representação de um tabuleiro e as operações basicas),
             // Camada Jogo de Xadrez(Implementada a inteligencia do jogo de xadrez)
             // Camada de Aplicação(É uma aplicativo no modo console que vai consumir as outras duas camadas, interagir com o usuário e executar o jogo.
+
+            Tabuleiro tab = new Tabuleiro(8, 8);
+            Console.WriteLine(tab);
+            
+            
+            
             Posicao P;
             P = new Posicao(3, 4);
             Console.WriteLine("Posição : "+P);
