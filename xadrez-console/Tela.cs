@@ -13,23 +13,39 @@ namespace xadrez_console
                 Console.Write(8 - i + " ");
                 for (int j = 0; j < tab.colunas; j++)
                 {
-
-                    if (tab.peca(i, j) == null)
-                    {
-                        Console.Write("- ");
-                    }
-                    else
-                    {
-                        imprimirPeca(tab.peca(i, j));
-                        Console.Write(" ");
-
-                    }
-
+                    imprimirPeca(tab.peca(i, j));
                 }
 
                 Console.WriteLine();
             }
             Console.WriteLine("  a b c d e f g h");
+        }
+        public static void imprimirTabuleiro(Tabuleiro tab, bool[,] posicoesPossiveis)
+        {
+            ConsoleColor fundoOriginal = Console.BackgroundColor;
+            ConsoleColor fundoAlterado = ConsoleColor.DarkGray;
+
+            for (int i = 0; i < tab.linhas; i++)
+            {
+                Console.Write(8 - i + " ");
+                for (int j = 0; j < tab.colunas; j++)
+                {
+                    if (posicoesPossiveis[i, j])//posicoesPOssiveis for verdadeiro
+                    {
+                        Console.BackgroundColor = fundoAlterado;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = fundoOriginal;
+                    }
+                    imprimirPeca(tab.peca(i, j));
+                    Console.BackgroundColor = fundoOriginal;
+                }
+
+                Console.WriteLine();
+            }
+            Console.WriteLine("  a b c d e f g h");
+            Console.BackgroundColor = fundoOriginal;
         }
         public static PosicaoXadrez lerPosicaoXadrez()
         {
@@ -41,17 +57,26 @@ namespace xadrez_console
 
         public static void imprimirPeca(Peca peca)
         {
-            if (peca.cor == Cor.Branca)
+            if (peca == null)
             {
-                Console.Write(peca);
+                Console.Write("- ");
             }
             else
             {
-                ConsoleColor aux = Console.ForegroundColor;//Foreground =Salva a atual cor da letra(branca) na variavel aux
-                Console.ForegroundColor = ConsoleColor.Yellow;//A Cor do atual do sistema recebe a cor amarela
-                Console.Write(peca);// imprime a peca na cor amarela
-                Console.ForegroundColor = aux; // volta para cor de antes;
+                if (peca.cor == Cor.Branca)
+                {
+                    Console.Write(peca);
+                }
+                else
+                {
+                    ConsoleColor aux = Console.ForegroundColor;//Foreground =Salva a atual cor da letra(branca) na variavel aux
+                    Console.ForegroundColor = ConsoleColor.Yellow;//A Cor do atual do sistema recebe a cor amarela
+                    Console.Write(peca);// imprime a peca na cor amarela
+                    Console.ForegroundColor = aux; // volta para cor de antes;
+                }
+                Console.Write(" ");
             }
         }
     }
 }
+

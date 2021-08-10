@@ -3,7 +3,7 @@
 
 namespace tabuleiro
 {
-    class Peca
+    abstract class Peca // Quando tem um método abstrato, a classe se torna abstrata
     {
         public Posicao posicao { get; set; }
         public Cor cor { get; protected set; }// protected -Só pode ser acessada por ela mesmo e por suas subclasses
@@ -17,6 +17,8 @@ namespace tabuleiro
             this.cor = cor;
             this.qteMovimentos = 0;
         }
+        public abstract bool[,] movimentosPossiveis();// método genérico, sem ser específica, dessa maneira, utiliza se o abstract- é um metodo que não tem implentação nessa classe.
+      
         public void incrementarQteMovimentos()
         {
             qteMovimentos++;
