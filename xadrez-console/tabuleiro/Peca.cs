@@ -17,11 +17,32 @@ namespace tabuleiro
             this.cor = cor;
             this.qteMovimentos = 0;
         }
-        public abstract bool[,] movimentosPossiveis();// método genérico, sem ser específica, dessa maneira, utiliza se o abstract- é um metodo que não tem implentação nessa classe.
       
         public void incrementarQteMovimentos()
         {
             qteMovimentos++;
         }
+        public bool existeMovimentosPossiveis() // método para testar se a peça não está bloqueada de movimentos
+        {
+            bool[,] mat = movimentosPossiveis();
+            for(int i=0; i < tab.linhas; i++)//percorre  a linha
+            {
+                for(int j = 0; j < tab.colunas; j++)//percorre a coluna
+                {
+                    if (mat[i, j])//se a posição estiver verdadeira, existe um movimento possível para essa peça
+                    {
+                        return true;//retorna verdaeiro
+                    }
+                }
+            }
+            return false;
+        }
+        public bool podeMoverPara(Posicao pos)
+        {
+            return movimentosPossiveis()[pos.linha, pos.coluna];
+        }
+        public abstract bool[,] movimentosPossiveis();// método genérico, sem ser específica, dessa maneira, utiliza se o abstract- é um metodo que não tem implentação nessa classe.
+
     }
+
 }
