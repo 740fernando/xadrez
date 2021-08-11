@@ -22,10 +22,7 @@ namespace xadrez_console
                     try
                     {
                         Console.Clear();
-                        Tela.imprimirTabuleiro(partida.tab);// Exbie o tabuleiro no terminal
-                        Console.WriteLine();
-                        Console.WriteLine("Turno : " + partida.turno);
-                        Console.WriteLine("Aguardando jogada: " + partida.jogadorAtual);
+                        Tela.imprimirPartida(partida);
 
                         Console.Write("Origem : ");
                         Posicao origem = Tela.lerPosicaoXadrez().toPosicao();// Ler a posição e transforma ela para posição de matriz
