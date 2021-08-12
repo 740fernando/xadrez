@@ -22,6 +22,10 @@ namespace tabuleiro
         {
             qteMovimentos++;
         }
+        public void decrementarQteMovimentos()
+        {
+            qteMovimentos--;
+        }
         public bool existeMovimentosPossiveis() // método para testar se a peça não está bloqueada de movimentos
         {
             bool[,] mat = movimentosPossiveis();
