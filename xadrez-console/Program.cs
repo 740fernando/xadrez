@@ -24,6 +24,7 @@ namespace xadrez_console
                         Console.Clear();
                         Tela.imprimirPartida(partida);
 
+                        Console.WriteLine();
                         Console.Write("Origem : ");
                         Posicao origem = Tela.lerPosicaoXadrez().toPosicao();// Ler a posição e transforma ela para posição de matriz
                         partida.validarPosicaoDeOrigem(origem);
@@ -46,24 +47,21 @@ namespace xadrez_console
                     }
 
                 }
-          
+                Console.Clear();
+                Tela.imprimirPartida(partida);
+
+                /* PosicaoXadrez pos = new PosicaoXadrez('c', 7);
+                 Console.WriteLine(pos);
+                 Console.WriteLine(pos.toPosicao());*/
 
 
-            
-
-                Tela.imprimirTabuleiro(partida.tab);
-
-               /* PosicaoXadrez pos = new PosicaoXadrez('c', 7);
-                Console.WriteLine(pos);
-                Console.WriteLine(pos.toPosicao());*/
-
-               
             }
-            catch(TabuleiroException e)
+            catch (TabuleiroException e)
             {
                 Console.WriteLine(e.Message);
             }
             Console.ReadLine();
+
         }
     }
 }

@@ -41,7 +41,7 @@ namespace xadrez
         {
             Peca p = tab.retirarPeca(destino);
             p.decrementarQteMovimentos();
-            if(pecasCapturadas != null)
+            if (pecasCapturadas != null)
             {
                 tab.colocarPeca(pecasCapturadas, destino);
                 capturadas.Remove(pecasCapturadas);
@@ -61,12 +61,19 @@ namespace xadrez
             {
                 xeque = true;
             }
-            turno++;
-            mudaJogador();
+            if (testeXequemate(adversaria(jogadorAtual)))
+            {
+                terminada = true;
+            }
+            else
+            {
+                turno++;
+                mudaJogador();
+            }
         }
         public void validarPosicaoDeOrigem(Posicao pos)
         {
-            if(tab.peca(pos) == null)// se n houver peça na posição escolhida
+            if (tab.peca(pos) == null)// se n houver peça na posição escolhida
             {
                 throw new TabuleiroException("Não existe peça na posição de origem escolhida");
             }
@@ -109,9 +116,9 @@ namespace xadrez
             }
             return aux;
         }
-        private Cor adversaria (Cor cor)
+        private Cor adversaria(Cor cor)
         {
-            if(cor == Cor.Branca)
+            if (cor == Cor.Branca)
             {
                 return Cor.Preta;
             }
@@ -122,9 +129,9 @@ namespace xadrez
         }
         private Peca rei(Cor cor)
         {
-            foreach(Peca x in pecasEmJogo(cor))// Lembrando que peca é uma superclasse
+            foreach (Peca x in pecasEmJogo(cor))// Lembrando que peca é uma superclasse
             {
-                if(x is Rei)//subclasse- Rei, torre, rainha e  assim por diante PARA TESTARMOS SE UMA VARIAVEL INSTANCIADA POR UMA SUPERCLASSE É UMA INSTANCIA DE ALGUMA SUBCLASSE
+                if (x is Rei)//subclasse- Rei, torre, rainha e  assim por diante PARA TESTARMOS SE UMA VARIAVEL INSTANCIADA POR UMA SUPERCLASSE É UMA INSTANCIA DE ALGUMA SUBCLASSE
                 {
                     return x;
 
@@ -132,10 +139,11 @@ namespace xadrez
             }
             return null;
         }
+
         public bool estaEmXeque(Cor cor)
         {
             Peca R = rei(cor);
-            if (R ==null)
+            if (R == null)
             {
                 throw new TabuleiroException("Não tem rei da cor " + cor + " no tabuleiro!");
             }
@@ -149,7 +157,44 @@ namespace xadrez
             }
             return false;
         }
-        public HashSet<Peca>pecasEmJogo(Cor cor)
+        // PARA IMPLEMENTARO  A REGRA DE XEQUE MATE VAI TER QUE VERIFICAR AS PEÇAS DA MESMA COR DO REI, SE ALGUMA MOVENDO TIRA O XEQUE DO REI
+        // SE ESGOTAR TODAS AS POSSIBILIDADES, CONCLUI QUE ESTÁ EM XEQUE MATE E ACABOU O JOGO
+        public bool testeXequemate(Cor cor)
+        {
+            if (!estaEmXeque(cor))
+            {
+                return false;
+            }
+            foreach (Peca x in pecasEmJogo(cor))
+            {
+                bool[,] mat = x.movimentosPossiveis();// matriz de movimentos possiveis da peça x, para cada movimento possível, verifica se tira do xeque
+                for (int i = 0; i < tab.linhas; i++)
+                {
+                    for (int j = 0; j < tab.colunas; j++)
+                    {
+                        if (mat[i, j])// Se a matriz na linha i na posição J for verdadeira
+                        {
+                            Posicao origem = x.posicao;
+                            Posicao destino = new Posicao(i, j);
+                            Peca pecaCapturada = executaMovimento(origem, destino);//faz o movimento
+                            bool testeXeque = estaEmXeque(cor);//testa se ainda está em xeque
+                            desfazMovimento(origem, destino, pecaCapturada);
+                            if (!testeXeque)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        public void colocarNovaPeca(char coluna, int linha, Peca peca)// método que coloca a peça no tabuleiro
+        {
+            tab.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
+            pecas.Add(peca);
+        }
+        public HashSet<Peca> pecasEmJogo(Cor cor)
         {
             HashSet<Peca> aux = new HashSet<Peca>();
             foreach (Peca x in pecas)
@@ -162,27 +207,17 @@ namespace xadrez
             aux.ExceptWith(pecasCapturadas(cor));//retira todas as peças capturadas dessa mesma cor
             return aux;
         }
-    
-        public void colocarNovaPeca( char coluna, int linha, Peca peca)// método que coloca a peça no tabuleiro
-        {
-            tab.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
-            pecas.Add(peca);
-        }
+
+
         private void colocarPecas()
         {
-            colocarNovaPeca('c', 1, new Torre(tab,Cor.Branca));
-            colocarNovaPeca('c', 2, new Torre(tab, Cor.Branca));
-            colocarNovaPeca('d', 2, new Torre(tab, Cor.Branca));
-            colocarNovaPeca('e', 2, new Torre(tab, Cor.Branca));
-            colocarNovaPeca('e', 1, new Torre(tab, Cor.Branca));
+            colocarNovaPeca('c', 1, new Torre(tab, Cor.Branca));
             colocarNovaPeca('d', 1, new Rei(tab, Cor.Branca));
+            colocarNovaPeca('h', 7, new Torre(tab, Cor.Branca));
 
-            colocarNovaPeca('c', 7, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('c', 8, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('d', 7, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('e', 7, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('e', 8, new Torre(tab, Cor.Preta));
-            colocarNovaPeca('d', 8, new Rei(tab, Cor.Preta));
+            colocarNovaPeca('a', 8, new Rei(tab, Cor.Preta));
+            colocarNovaPeca('b', 8, new Torre (tab, Cor.Preta));
+        
 
         }
     }
